@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Leaf, Github, Heart } from 'lucide-react'
+import { Leaf, Heart } from 'lucide-react'
 
 function Footer() {
   return (
