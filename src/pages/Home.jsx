@@ -8,7 +8,6 @@ import {
   Upload,
   Brain,
   ClipboardCheck,
-  Leaf,
   Zap,
   Target,
   BookOpen

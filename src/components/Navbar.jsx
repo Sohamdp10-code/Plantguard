@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Leaf, Menu, X } from 'lucide-react'
+import { Leaf, Menu, X, Scan } from 'lucide-react'
 
 function Navbar() {
   const [scrolled, setScrolled] = useState(false)
@@ -13,11 +13,14 @@ function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  useEffect(() => {
-    setMobileOpen(false)
-  }, [location])
+  const closeMobile = () => setMobileOpen(false)
 
-  const isActive = (path) => location.pathname === path ? 'active' : ''
+  const isActive = (path, search = '') => {
+    if (search) {
+      return location.pathname === path && location.search.includes(search) ? 'active' : ''
+    }
+    return location.pathname === path && !location.search ? 'active' : ''
+  }
 
   return (
     <>
@@ -27,15 +30,17 @@ function Navbar() {
             <div className="logo-icon">
               <Leaf size={20} />
             </div>
-            Fasal Rakshak
+            <span>Fasal Rakshak</span>
           </Link>
 
           <div className="navbar-links">
             <Link to="/" className={isActive('/')} id="nav-home">Home</Link>
             <Link to="/detect" className={isActive('/detect')} id="nav-detect">Detect</Link>
+            <Link to="/detect?tab=guide" className={isActive('/detect', 'tab=guide')} id="nav-guide">Disease Guide</Link>
+            <Link to="/detect?tab=history" className={isActive('/detect', 'tab=history')} id="nav-history">History</Link>
             <Link to="/about" className={isActive('/about')} id="nav-about">About</Link>
             <Link to="/detect" className="btn btn-primary navbar-cta" id="nav-cta">
-              Start Scan
+              <Scan size={16} /> Start Scan
             </Link>
           </div>
 
@@ -54,16 +59,18 @@ function Navbar() {
       <div className={`mobile-nav ${mobileOpen ? 'open' : ''}`} id="mobile-nav">
         <button
           className="mobile-nav-close"
-          onClick={() => setMobileOpen(false)}
+          onClick={closeMobile}
           aria-label="Close menu"
           id="mobile-menu-close"
         >
           <X size={28} />
         </button>
-        <Link to="/" id="mobile-nav-home">Home</Link>
-        <Link to="/detect" id="mobile-nav-detect">Detect Disease</Link>
-        <Link to="/about" id="mobile-nav-about">About</Link>
-        <Link to="/detect" className="btn btn-primary" id="mobile-nav-cta">
+        <Link to="/" onClick={closeMobile} id="mobile-nav-home">Home</Link>
+        <Link to="/detect" onClick={closeMobile} id="mobile-nav-detect">Detect Disease</Link>
+        <Link to="/detect?tab=guide" onClick={closeMobile} id="mobile-nav-guide">Disease Guide</Link>
+        <Link to="/detect?tab=history" onClick={closeMobile} id="mobile-nav-history">Scan History</Link>
+        <Link to="/about" onClick={closeMobile} id="mobile-nav-about">About</Link>
+        <Link to="/detect" onClick={closeMobile} className="btn btn-primary" id="mobile-nav-cta">
           Start Scan
         </Link>
       </div>

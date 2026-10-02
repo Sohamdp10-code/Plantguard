@@ -19,23 +19,26 @@ function Footer() {
           </div>
 
           <div className="footer-col">
-            <h4>Navigation</h4>
-            <Link to="/" id="footer-home">Home</Link>
-            <Link to="/detect" id="footer-detect">Detect Disease</Link>
-            <Link to="/about" id="footer-about">About</Link>
+            <h4>Features</h4>
+            <Link to="/detect" id="footer-detect">Scan Leaf</Link>
+            <Link to="/detect?tab=guide" id="footer-guide">Disease Guide</Link>
+            <Link to="/detect?tab=history" id="footer-history">Scan History</Link>
+            <Link to="/detect?tab=settings" id="footer-settings">Model Settings</Link>
           </div>
 
           <div className="footer-col">
-            <h4>Resources</h4>
-            <a href="https://react.dev" target="_blank" rel="noopener noreferrer" id="footer-react">React Docs</a>
-            <a href="https://vite.dev" target="_blank" rel="noopener noreferrer" id="footer-vite">Vite Docs</a>
-            <a href="#" id="footer-contact">Contact Us</a>
+            <h4>Quick Links</h4>
+            <Link to="/" id="footer-home">Home</Link>
+            <Link to="/about" id="footer-about">About Us</Link>
+            <a href="/cropguard.html" target="_blank" rel="noopener noreferrer" id="footer-standalone">
+              Standalone App
+            </a>
           </div>
         </div>
 
         <div className="footer-bottom">
           <p>
-            © {new Date().getFullYear()} Fasal Rakshak. Made with{' '}
+            © {new Date().getFullYear()} Fasal Rakshak (CropGuard). Made with{' '}
             <Heart size={13} style={{ display: 'inline', verticalAlign: 'middle', color: 'var(--accent-danger)' }} />{' '}
             for Indian Farmers.
           </p>
