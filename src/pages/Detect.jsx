@@ -25,6 +25,23 @@ import {
 } from 'lucide-react'
 import { CROP_DISEASE_DB, CROP_LIST, TRANSLATIONS } from '../data/cropDiseases'
 
+const normalizeDiseaseLabel = (value = '') =>
+  String(value)
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim()
+
+const findDiseaseEntry = (label) => {
+  const normalized = normalizeDiseaseLabel(label)
+
+  if (CROP_DISEASE_DB[label]) return CROP_DISEASE_DB[label]
+
+  return Object.entries(CROP_DISEASE_DB).find(([key, item]) =>
+    normalizeDiseaseLabel(key) === normalized ||
+    normalizeDiseaseLabel(item.name) === normalized
+  )?.[1]
+}
+
 function Detect() {
   const [searchParams, setSearchParams] = useSearchParams()
   const rawTab = searchParams.get('tab')
@@ -40,7 +57,11 @@ function Detect() {
   const [toastMessage, setToastMessage] = useState('')
 
   // Settings state
-  const [apiUrl, setApiUrl] = useState(() => localStorage.getItem('plantguard_api_url') || '')
+  const DEFAULT_API_URL = 'http://127.0.0.1:8000/predict'
+  const [apiUrl, setApiUrl] = useState(() => {
+    const savedUrl = localStorage.getItem('plantguard_api_url')
+    return savedUrl === null ? DEFAULT_API_URL : savedUrl
+  })
   const [testStatus, setTestStatus] = useState(null) // { success: boolean, msg: string }
 
   // History state
@@ -120,33 +141,50 @@ function Detect() {
       let isDemo = false
 
       if (apiUrl.trim()) {
-        // Connect to user's custom deep learning endpoint
+        // Connect to the FastAPI prediction endpoint.
         const formData = new FormData()
         formData.append('file', imageFile)
         if (selectedCrop) {
           formData.append('crop', selectedCrop)
         }
 
-        const response = await fetch(apiUrl.trim(), {
+        const configuredUrl = apiUrl.trim().replace(/\/+$/, '')
+        const predictUrl = /\/predict$/i.test(configuredUrl)
+          ? configuredUrl
+          : `${configuredUrl}/predict`
+
+        const response = await fetch(predictUrl, {
           method: 'POST',
           body: formData
         })
 
         if (!response.ok) {
-          throw new Error(`Server returned HTTP ${response.status}`)
+          const errorText = await response.text()
+          throw new Error(`Server returned HTTP ${response.status}: ${errorText}`)
         }
 
         const data = await response.json()
-        const rawPreds = (data.predictions || [data])
+        if (!Array.isArray(data.predictions)) {
+          throw new Error('API did not return a valid predictions array.')
+        }
+
+        const rawPreds = data.predictions
           .filter((p) => p && (p.label || p.class || p.name))
-          .map((p) => ({
-            label: p.label || p.class || p.name,
-            confidence: Number(p.confidence ?? p.score ?? 0.85)
-          }))
+          .map((p) => {
+            let confidence = Number(p.confidence ?? p.score ?? 0)
+            if (!Number.isFinite(confidence)) confidence = 0
+            if (confidence > 1 && confidence <= 100) confidence /= 100
+            confidence = Math.max(0, Math.min(1, confidence))
+
+            return {
+              label: String(p.label || p.class || p.name),
+              confidence
+            }
+          })
           .sort((a, b) => b.confidence - a.confidence)
 
         if (!rawPreds.length) {
-          throw new Error('API response did not return any predictions array')
+          throw new Error('API response did not return any usable predictions.')
         }
 
         predictions = rawPreds.slice(0, 3)
@@ -178,10 +216,7 @@ function Detect() {
       const topPred = predictions[0]
       const labelKey = topPred.label
       const dbEntry =
-        CROP_DISEASE_DB[labelKey] ||
-        Object.values(CROP_DISEASE_DB).find(
-          (item) => item.name.toLowerCase() === labelKey.toLowerCase()
-        ) || {
+        findDiseaseEntry(labelKey) || {
           name: labelKey.replace(/_+/g, ' '),
           crop: selectedCrop || 'Crop',
           isHealthy: labelKey.toLowerCase().includes('healthy'),
@@ -209,7 +244,7 @@ function Detect() {
         prevention: dbEntry.prevention,
         isDemo,
         otherPossibilities: predictions.slice(1).map((p) => {
-          const entry = CROP_DISEASE_DB[p.label]
+          const entry = findDiseaseEntry(p.label)
           return {
             name: entry?.name || p.label.replace(/_+/g, ' '),
             confidence: Math.round(p.confidence * 100)
@@ -288,14 +323,21 @@ function Detect() {
     }
     setTestStatus({ loading: true, msg: t.testingConnection })
     try {
-      const res = await fetch(apiUrl.trim(), { method: 'OPTIONS' })
-      if (res.ok || res.status === 405 || res.status === 404) {
-        setTestStatus({ success: true, msg: t.serverReachable })
-      } else {
-        setTestStatus({ success: false, msg: `Server responded with status ${res.status}` })
+      const baseUrl = apiUrl.trim().replace(/\/+$/, '')
+      const healthUrl =
+        baseUrl.replace(/\/(predict|health)$/i, '') + '/health'
+      const res = await fetch(healthUrl, { method: 'GET' })
+
+      if (!res.ok) {
+        throw new Error(`Server responded with status ${res.status}`)
       }
-    } catch {
-      setTestStatus({ success: false, msg: t.serverError })
+
+      setTestStatus({ success: true, msg: t.serverReachable })
+    } catch (err) {
+      setTestStatus({
+        success: false,
+        msg: err.message || t.serverError
+      })
     }
   }
 
