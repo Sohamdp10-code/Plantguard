@@ -1,242 +1,185 @@
-import { useEffect, useRef } from 'react'
-import { Link } from 'react-router-dom'
-import {
-  Scan,
-  Shield,
-  Sparkles,
-  ArrowRight,
-  Upload,
-  Brain,
-  ClipboardCheck,
-  Zap,
-  Target,
-  BookOpen
-} from 'lucide-react'
+import { Link } from 'react-router-dom';
+import { Cpu, Camera, Sprout, Pill, ArrowRight, Shield, Zap, Users, ChevronRight } from 'lucide-react';
+import './Home.css';
 
-function Home() {
-  const observerRef = useRef(null)
+export default function Home() {
+  const features = [
+    {
+      icon: <Cpu size={28} />,
+      title: 'AI-Powered Detection',
+      desc: 'Advanced image analysis to identify plant diseases from visual symptoms.'
+    },
+    {
+      icon: <Camera size={28} />,
+      title: 'Image-Based Analysis',
+      desc: 'Simply upload a photo — no complex tools or equipment needed.'
+    },
+    {
+      icon: <Sprout size={28} />,
+      title: 'Plant Health Insights',
+      desc: 'Get detailed health assessments with visual feature analysis.'
+    },
+    {
+      icon: <Pill size={28} />,
+      title: 'Treatment Guidance',
+      desc: 'Receive informational recommendations for managing detected diseases.'
+    }
+  ];
 
-  useEffect(() => {
-    observerRef.current = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible')
-          }
-        })
-      },
-      { threshold: 0.1, rootMargin: '0px 0px -60px 0px' }
-    )
-
-    document.querySelectorAll('.fade-in-up').forEach((el) => {
-      observerRef.current.observe(el)
-    })
-
-    return () => observerRef.current?.disconnect()
-  }, [])
+  const howItWorks = [
+    { step: '01', title: 'Upload Image', desc: 'Take or upload a clear picture of the affected plant or leaf.' },
+    { step: '02', title: 'AI Analysis', desc: 'Our model examines visual features like color, spots, and texture.' },
+    { step: '03', title: 'Get Results', desc: 'Receive disease identification with confidence level and details.' },
+    { step: '04', title: 'Take Action', desc: 'Follow informational recommendations to address the issue.' },
+  ];
 
   return (
-    <>
+    <div className="page home-page">
       {/* Hero Section */}
-      <section className="hero" id="hero-section">
+      <section className="hero">
         <div className="hero-bg">
-          <div className="hero-grid-overlay" />
+          <div className="hero-blob hero-blob-1" />
+          <div className="hero-blob hero-blob-2" />
+          <div className="hero-blob hero-blob-3" />
         </div>
-
-        <div className="container">
-          <div className="hero-content">
-            <div className="hero-badge">
-              <span className="badge-dot" />
-              AI-Powered Plant Healthcare
-            </div>
-
-            <h1>
-              Protect Your Crops{' '}
-              <span className="text-gradient">with AI</span>
+        <div className="container hero-container">
+          <div className="hero-content animate-fade-in-up">
+            <span className="hero-badge">
+              <Sprout size={16} />
+              AI-Based Plant Disease Detection
+            </span>
+            <h1 className="hero-title">
+              Protect Your Plants
+              <span className="hero-title-accent"> with AI</span>
             </h1>
-
-            <p>
-              Upload a photo of your plant and let our AI instantly detect
-              diseases, suggest treatments, and help you save your harvest.
-              Fast, accurate, and free.
+            <p className="hero-subtitle">
+              Upload a plant image and let AI analyze visible symptoms to identify possible diseases. Fast, simple, and designed for everyone.
             </p>
-
             <div className="hero-actions">
-              <Link to="/detect" className="btn btn-primary btn-lg" id="hero-cta-primary">
-                Start Detection <ArrowRight size={18} />
+              <Link to="/detect" className="btn btn-primary btn-lg">
+                <Sprout size={20} />
+                Detect Disease
+                <ArrowRight size={18} />
               </Link>
-              <Link to="/about" className="btn btn-secondary btn-lg" id="hero-cta-secondary">
-                Learn More
+              <Link to="/about" className="btn btn-secondary btn-lg">
+                📚 Learn More
               </Link>
             </div>
+            <div className="hero-stats">
+              <div className="hero-stat">
+                <span className="hero-stat-value">12+</span>
+                <span className="hero-stat-label">Diseases Covered</span>
+              </div>
+              <div className="hero-stat-divider" />
+              <div className="hero-stat">
+                <span className="hero-stat-value">5+</span>
+                <span className="hero-stat-label">Crop Types</span>
+              </div>
+              <div className="hero-stat-divider" />
+              <div className="hero-stat">
+                <span className="hero-stat-value">Fast</span>
+                <span className="hero-stat-label">Analysis</span>
+              </div>
+            </div>
           </div>
-        </div>
-
-        <div className="hero-float-card">
-          <div className="float-icon">
-            <Shield size={20} />
-          </div>
-          <div className="float-text">
-            <h4>95%+ Accuracy</h4>
-            <p>AI-powered detection</p>
+          <div className="hero-visual animate-fade-in-up delay-2">
+            <div className="hero-plant-card">
+              <div className="hero-leaf hero-leaf-1">🌿</div>
+              <div className="hero-leaf hero-leaf-2">🍃</div>
+              <div className="hero-leaf hero-leaf-3">🌱</div>
+              <div className="hero-plant-icon">🌿</div>
+              <div className="hero-scan-ring" />
+              <div className="hero-scan-ring hero-scan-ring-2" />
+              <div className="hero-ai-badge">
+                <Cpu size={14} />
+                AI Analyzing...
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="features section" id="features-section">
+      <section className="section features-section">
         <div className="container">
-          <div className="section-header fade-in-up">
-            <span className="section-label">Features</span>
-            <h2>Everything You Need to Protect Your Plants</h2>
-            <p>
-              Advanced AI technology meets agricultural expertise to deliver
-              accurate plant disease detection and actionable insights.
-            </p>
-          </div>
-
+          <h2 className="section-title">Why Choose Fasal Rakshak?</h2>
+          <p className="section-subtitle">
+            A simple yet powerful tool that brings AI-powered plant health monitoring to your fingertips.
+          </p>
           <div className="features-grid">
-            <div className="feature-card fade-in-up" id="feature-ai">
-              <div className="feature-icon green">
-                <Brain size={24} />
+            {features.map((feature, index) => (
+              <div key={index} className={`feature-card card animate-fade-in-up delay-${index + 1}`}>
+                <div className="feature-icon">{feature.icon}</div>
+                <h3>{feature.title}</h3>
+                <p>{feature.desc}</p>
               </div>
-              <h3>AI-Powered Analysis</h3>
-              <p>
-                Our deep learning model analyzes leaf images to detect visual
-                symptoms and identify diseases with high accuracy.
-              </p>
-            </div>
-
-            <div className="feature-card fade-in-up" id="feature-diseases">
-              <div className="feature-icon amber">
-                <Target size={24} />
-              </div>
-              <h3>30+ Diseases Detected</h3>
-              <p>
-                Comprehensive disease database covering major crops including
-                tomato, potato, corn, rice, and more.
-              </p>
-            </div>
-
-            <div className="feature-card fade-in-up" id="feature-treatment">
-              <div className="feature-icon blue">
-                <BookOpen size={24} />
-              </div>
-              <h3>Treatment Advice</h3>
-              <p>
-                Get actionable treatment recommendations and prevention tips
-                tailored to each detected disease.
-              </p>
-            </div>
-
-            <div className="feature-card fade-in-up" id="feature-speed">
-              <div className="feature-icon orange">
-                <Zap size={24} />
-              </div>
-              <h3>Instant Results</h3>
-              <p>
-                Get your diagnosis in seconds. No waiting, no complicated
-                setup — just upload and go.
-              </p>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* How It Works */}
-      <section className="how-it-works section" id="how-it-works-section">
+      <section className="section how-section">
         <div className="container">
-          <div className="section-header fade-in-up">
-            <span className="section-label">How It Works</span>
-            <h2>Three Simple Steps</h2>
-            <p>
-              Detecting plant diseases has never been easier. Follow these
-              three simple steps to get started.
-            </p>
-          </div>
-
-          <div className="steps-grid">
-            <div className="step-card fade-in-up" id="step-1">
-              <div className="step-number">1</div>
-              <div className="step-icon">
-                <Upload size={28} />
+          <h2 className="section-title">How It Works</h2>
+          <p className="section-subtitle">
+            Get results in just a few simple steps — no technical knowledge required.
+          </p>
+          <div className="how-grid">
+            {howItWorks.map((item, index) => (
+              <div key={index} className="how-card">
+                <div className="how-step">{item.step}</div>
+                <h3>{item.title}</h3>
+                <p>{item.desc}</p>
+                {index < howItWorks.length - 1 && (
+                  <ChevronRight className="how-arrow" size={24} />
+                )}
               </div>
-              <h3>Upload Image</h3>
-              <p>
-                Take a clear photo of the affected plant leaf and upload it
-                to our platform.
-              </p>
-            </div>
-
-            <div className="step-card fade-in-up" id="step-2">
-              <div className="step-number">2</div>
-              <div className="step-icon">
-                <Scan size={28} />
-              </div>
-              <h3>AI Analysis</h3>
-              <p>
-                Our trained model processes the image and analyzes visible
-                symptoms using deep learning.
-              </p>
-            </div>
-
-            <div className="step-card fade-in-up" id="step-3">
-              <div className="step-number">3</div>
-              <div className="step-icon">
-                <ClipboardCheck size={28} />
-              </div>
-              <h3>Get Results</h3>
-              <p>
-                Receive a detailed diagnosis with disease identification,
-                severity level, and treatment plan.
-              </p>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="stats section" id="stats-section">
+      {/* Quick Access */}
+      <section className="section quick-section">
         <div className="container">
-          <div className="stats-grid">
-            <div className="stat-item fade-in-up">
-              <h3 className="text-gradient">50K+</h3>
-              <p>Scans Performed</p>
-            </div>
-            <div className="stat-item fade-in-up">
-              <h3 className="text-gradient">30+</h3>
-              <p>Diseases Detected</p>
-            </div>
-            <div className="stat-item fade-in-up">
-              <h3 className="text-gradient">95%+</h3>
-              <p>Accuracy Rate</p>
-            </div>
-            <div className="stat-item fade-in-up">
-              <h3 className="text-gradient">10K+</h3>
-              <p>Farmers Helped</p>
-            </div>
+          <div className="quick-cards">
+            <Link to="/quick-diagnosis" className="quick-card quick-card-diagnosis">
+              <div className="quick-card-icon">🩺</div>
+              <h3>Quick Diagnosis</h3>
+              <p>Answer simple questions about your plant's symptoms for a guided assessment.</p>
+              <span className="quick-card-link">
+                Try Now <ArrowRight size={16} />
+              </span>
+            </Link>
+            <Link to="/diseases" className="quick-card quick-card-library">
+              <div className="quick-card-icon">📚</div>
+              <h3>Disease Library</h3>
+              <p>Browse our searchable database of common plant diseases and treatments.</p>
+              <span className="quick-card-link">
+                Explore <ArrowRight size={16} />
+              </span>
+            </Link>
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="cta-section section" id="cta-section">
+      <section className="section cta-section">
         <div className="container">
-          <div className="cta-box fade-in-up">
-            <Sparkles size={32} style={{ color: 'var(--accent)', marginBottom: '1rem' }} />
-            <h2>Ready to Protect Your Crops?</h2>
-            <p>
-              Start detecting plant diseases today. It's fast, accurate, and
-              completely free to use.
-            </p>
-            <Link to="/detect" className="btn btn-primary btn-lg" id="cta-button">
-              Start Free Scan <ArrowRight size={18} />
-            </Link>
+          <div className="cta-card">
+            <div className="cta-content">
+              <h2>Ready to Protect Your Plants?</h2>
+              <p>Upload a photo of your plant and get instant AI-powered analysis.</p>
+              <Link to="/detect" className="btn btn-primary btn-lg">
+                <Sprout size={20} />
+                Start Detection
+                <ArrowRight size={18} />
+              </Link>
+            </div>
           </div>
         </div>
       </section>
-    </>
-  )
+    </div>
+  );
 }
-
-export default Home
