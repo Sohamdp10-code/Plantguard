@@ -57,7 +57,7 @@ function Detect() {
   const [toastMessage, setToastMessage] = useState('')
 
   // Settings state
-  const DEFAULT_API_URL = 'http://127.0.0.1:8000/predict'
+  const DEFAULT_API_URL = 'https://plantguard-wl2l.onrender.com/predict'
   const [apiUrl, setApiUrl] = useState(() => {
     const savedUrl = localStorage.getItem('plantguard_api_url')
     return savedUrl === null ? DEFAULT_API_URL : savedUrl
