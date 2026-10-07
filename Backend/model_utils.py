@@ -8,12 +8,16 @@ import tensorflow as tf
 from PIL import Image, ImageOps
 
 BASE_DIR = Path(__file__).resolve().parent
-MODEL_PATH = BASE_DIR / "models" / "plant_model_fast.keras"
+MODEL_PATH = BASE_DIR / "models" / "plantguard_efficientnet.keras"
 CLASS_PATH = BASE_DIR / "class_names.json"
 
-# Set this only after checking the model's original training code.
+# This model (PlantGuard_EfficientNetB0) has its own Rescaling + Normalization
+# layers baked into the graph (confirmed by inspecting config.json inside the
+# .keras file), so the API must feed it RAW 0-255 pixel values. Dividing by
+# 255 here (like the old MobileNet model needed) would double-normalize the
+# input and silently wreck prediction accuracy.
 # Options: "zero_one", "minus_one_one", "none"
-PREPROCESS_MODE = os.getenv("PREPROCESS_MODE", "zero_one")
+PREPROCESS_MODE = os.getenv("PREPROCESS_MODE", "none")
 
 def load_classes():
     with open(CLASS_PATH, "r", encoding="utf-8") as f:
