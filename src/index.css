@@ -372,10 +372,19 @@ main {
   -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, black 20%, transparent 100%);
 }
 
+.hero > .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  width: 100%;
+}
+
 .hero-content {
   position: relative;
   z-index: 1;
-  max-width: 720px;
+  max-width: 580px;
+  flex-shrink: 0;
 }
 
 .hero-badge {
@@ -2493,9 +2502,158 @@ main {
     color: #000 !important;
   }
 
+
   .status-pill {
     border: 1px solid #333 !important;
     color: #000 !important;
+  }
+}
+
+/* ============================================
+   FARM ANIMATION — Hero Illustration (Now Leaf Animation)
+   ============================================ */
+
+.farm-animation {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  min-width: 280px;
+  max-width: 520px;
+  opacity: 0;
+  transform: translateX(40px) scale(0.95);
+  transition: opacity 1s var(--ease-out), transform 1s var(--ease-out);
+}
+
+.farm-animation.farm-loaded {
+  opacity: 1;
+  transform: translateX(0) scale(1);
+}
+
+.farm-svg {
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 0 60px rgba(34, 197, 94, 0.15));
+}
+
+.center-orb {
+  animation: pulseOrb 4s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@keyframes pulseOrb {
+  0%, 100% { transform: scale(0.9); opacity: 0.6; }
+  50% { transform: scale(1.1); opacity: 1; }
+}
+
+.floating-particle {
+  animation: floatParticle 8s linear infinite;
+}
+
+@keyframes floatParticle {
+  0% { transform: translateY(0) translateX(0); opacity: 0; }
+  20% { opacity: 0.5; }
+  80% { opacity: 0.5; }
+  100% { transform: translateY(-100px) translateX(50px); opacity: 0; }
+}
+
+.main-plant {
+  animation: plantBreathe 5s ease-in-out infinite;
+  transform-origin: 300px 450px;
+}
+
+@keyframes plantBreathe {
+  0%, 100% { transform: scaleY(1) rotate(0deg); }
+  50% { transform: scaleY(1.05) rotate(2deg); }
+}
+
+.pulse-leaf {
+  animation: leafColorPulse 4s ease-in-out infinite;
+  transform-origin: 300px 250px;
+}
+
+.pulse-leaf-left {
+  animation: leafColorPulse 4s ease-in-out infinite 1s, leafWiggle 3s ease-in-out infinite;
+  transform-origin: 300px 320px;
+}
+
+.pulse-leaf-right {
+  animation: leafColorPulse 4s ease-in-out infinite 2s, leafWiggle 3.5s ease-in-out infinite reverse;
+  transform-origin: 300px 360px;
+}
+
+@keyframes leafColorPulse {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.3); }
+}
+
+@keyframes leafWiggle {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(5deg); }
+}
+
+.swirl-leaf-container {
+  animation: swirlRotate 15s linear infinite;
+}
+
+@keyframes swirlRotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.swirl-leaf-inner {
+  animation: swirlPulse 2s ease-in-out infinite alternate;
+}
+
+@keyframes swirlPulse {
+  0% { transform: scale(0.8); opacity: 0.5; }
+  100% { transform: scale(1.2); opacity: 1; }
+}
+
+.glowing-orb {
+  animation: orbFloat 4s ease-in-out infinite, orbGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes orbFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes orbGlow {
+  0% { opacity: 0.4; r: 4; }
+  100% { opacity: 1; r: 8; }
+}
+
+/* --- Responsive --- */
+@media (max-width: 968px) {
+  .farm-animation {
+    max-width: 360px;
+    min-width: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero > .container {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .hero-content {
+    max-width: 100%;
+  }
+
+  .hero-actions {
+    justify-content: center;
+  }
+
+  .farm-animation {
+    max-width: 320px;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .farm-animation {
+    max-width: 260px;
   }
 }
 

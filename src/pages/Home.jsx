@@ -12,6 +12,7 @@ import {
   Target,
   BookOpen
 } from 'lucide-react'
+import FarmAnimation from '../components/FarmAnimation'
 
 function Home() {
   const observerRef = useRef(null)
@@ -70,6 +71,8 @@ function Home() {
               </Link>
             </div>
           </div>
+
+          <FarmAnimation />
         </div>
 
         <div className="hero-float-card">
