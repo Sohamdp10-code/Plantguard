@@ -21,11 +21,11 @@ function About() {
         {/* Hero */}
         <div className="about-hero">
           <h1>
-            About <span className="text-gradient">Fasal Rakshak</span>
+            About <span className="text-gradient">PlantGuard</span>
           </h1>
           <p>
-            Fasal Rakshak (फसल रक्षक) means "Crop Protector" in Hindi. We're on
-            a mission to empower farmers with AI-powered tools for early plant
+            PlantGuard is your AI-powered plant health companion. We're on
+            a mission to empower farmers with intelligent tools for early plant
             disease detection and crop protection.
           </p>
         </div>
@@ -62,7 +62,7 @@ function About() {
             </div>
             <h3>Our Impact</h3>
             <p>
-              Designed as a tool for Indian agriculture, Fasal Rakshak aims to
+              Designed as a tool for Indian agriculture, PlantGuard aims to
               bridge the gap between advanced AI research and the farmers who
               need it most.
             </p>

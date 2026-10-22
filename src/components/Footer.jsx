@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Leaf, Heart } from 'lucide-react'
+import { Sprout, Heart } from 'lucide-react'
 
 function Footer() {
   return (
@@ -8,8 +8,8 @@ function Footer() {
         <div className="footer-grid">
           <div className="footer-brand">
             <h3>
-              <Leaf size={20} style={{ color: 'var(--accent)' }} />
-              Fasal Rakshak
+              <Sprout size={20} style={{ color: 'var(--accent)' }} />
+              PlantGuard
             </h3>
             <p>
               AI-powered plant disease detection system helping farmers protect
@@ -38,7 +38,7 @@ function Footer() {
 
         <div className="footer-bottom">
           <p>
-            © {new Date().getFullYear()} Fasal Rakshak (CropGuard). Made with{' '}
+            © {new Date().getFullYear()} PlantGuard. Made with{' '}
             <Heart size={13} style={{ display: 'inline', verticalAlign: 'middle', color: 'var(--accent-danger)' }} />{' '}
             for Indian Farmers.
           </p>

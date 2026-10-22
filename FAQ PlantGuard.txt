@@ -1,0 +1,1035 @@
+FAQ PlantGuard
+
+Absolutely. For your **CropGuard/PlantGuard evaluation**, the evaluator can ask questions from **ML, dataset, CNN, EfficientNet, frontend, backend, API, deployment, metrics, limitations, and your actual implementation**.
+
+Below is a **long viva FAQ**, but I've written the answers in **easy language that you can actually speak**, not textbook language.
+
+---
+
+# 🌱 PlantGuard / CropGuard — Complete Evaluation FAQ
+
+## PART 1 — BASIC PROJECT QUESTIONS
+
+### Q1. What is your project?
+
+**Answer:**
+
+> "PlantGuard is an AI-powered web application for preliminary crop disease detection. The user uploads or captures a plant-leaf image, and our deep-learning model analyzes the image and predicts the most likely disease. We also show the confidence score and disease-related information such as symptoms, cause, treatment and prevention."
+
+---
+
+### Q2. What problem are you solving?
+
+> "The main problem is that identifying crop diseases manually can be difficult and time-consuming. Farmers may not always have immediate access to agricultural experts. Our system provides a quick AI-assisted preliminary detection from a leaf image."
+
+---
+
+### Q3. Why did you choose this project?
+
+> "We wanted to apply machine learning to a practical real-world problem. Plant diseases have visible patterns on leaves, so image classification is a suitable application of deep learning."
+
+---
+
+### Q4. Who are the target users?
+
+> "The primary target users are farmers, agricultural students, gardeners and people who want preliminary information about plant diseases."
+
+---
+
+### Q5. Can your project replace an agricultural expert?
+
+> "No. PlantGuard is an AI-assisted screening and information tool, not a replacement for an agricultural expert. Important treatment decisions should still be verified by a qualified expert."
+
+---
+
+### Q6. What is the main input and output?
+
+**Input:**
+
+> "A plant or leaf image."
+
+**Output:**
+
+> "Predicted disease or healthy class, confidence score and related disease information."
+
+---
+
+# PART 2 — PROJECT ARCHITECTURE
+
+### Q7. Explain your complete project architecture.
+
+> "Our architecture has three main parts: frontend, backend and machine-learning model."
+
+```text
+User
+ ↓
+React Frontend
+ ↓
+FastAPI Backend
+ ↓
+Image Preprocessing
+ ↓
+EfficientNetB0
+ ↓
+38-Class Prediction
+ ↓
+JSON Response
+ ↓
+React Result Page
+```
+
+> "The frontend handles user interaction, FastAPI connects the frontend with the model, and EfficientNetB0 performs the actual image classification."
+
+---
+
+### Q8. What happens after the user uploads an image?
+
+> "React receives the image and sends it as a multipart request to our FastAPI `/predict` endpoint. FastAPI receives and preprocesses the image, resizes it to 160×160 pixels, and sends it to the EfficientNetB0 model. The model produces probabilities for 38 classes. The backend maps the highest prediction to its class name and returns the result to React."
+
+---
+
+### Q9. Why did you separate frontend and backend?
+
+> "The frontend is responsible for the user interface, while the backend handles Python-based machine learning. Separating them makes the system easier to develop, maintain and deploy."
+
+---
+
+### Q10. What is the role of FastAPI?
+
+> "FastAPI acts as the communication layer between our React frontend and the TensorFlow/Keras model."
+
+---
+
+### Q11. Why FastAPI instead of Flask?
+
+> "FastAPI is lightweight, fast and provides convenient API development with automatic documentation through Swagger. It also works very naturally with Python machine-learning applications."
+
+---
+
+### Q12. What is an API?
+
+> "API stands for Application Programming Interface. In our project, it allows the React frontend to communicate with the Python backend."
+
+---
+
+### Q13. What is `/predict`?
+
+> "`/predict` is our main prediction endpoint. It receives the uploaded image and returns the predicted disease classes and their confidence scores."
+
+---
+
+### Q14. What is `/health`?
+
+> "`/health` is a health-check endpoint. It allows us to verify whether our backend and model service are running correctly."
+
+---
+
+# PART 3 — DATASET
+
+### Q15. Which dataset did you use?
+
+> "We used the PlantVillage dataset."
+
+---
+
+### Q16. What is PlantVillage?
+
+> "PlantVillage is a plant disease image dataset containing labeled images from multiple crops and disease categories."
+
+---
+
+### Q17. How many classes do you have?
+
+# **38 classes.**
+
+This is one of the numbers everyone should memorize.
+
+---
+
+### Q18. How many crops?
+
+> "Our dataset covers 14 crop species, while the model has 38 total classes because those classes include both disease and healthy categories."
+
+---
+
+### Q19. What is the difference between classes and diseases?
+
+> "A class is one possible output of the model. Some classes represent diseases and some represent healthy plants. Therefore, 38 classes does not mean 38 diseases."
+
+---
+
+### Q20. Give examples of your classes.
+
+> "For example, Corn has Common Rust, Northern Leaf Blight, Cercospora or Gray Leaf Spot and Healthy. Tomato has several disease classes including Early Blight, Late Blight, Leaf Mold, Septoria Leaf Spot and others."
+
+---
+
+### Q21. How did you divide your dataset?
+
+> "We used an 80% training and 20% validation split."
+
+---
+
+### Q22. What is training data?
+
+> "Training data is the data used by the model to learn its parameters."
+
+---
+
+### Q23. What is validation data?
+
+> "Validation data is held-out data used to monitor how well the model generalizes during development and training."
+
+---
+
+### Q24. Why do we need validation data?
+
+> "If we only check performance on training data, the model could memorize the training examples. Validation data gives us an estimate of performance on unseen images."
+
+---
+
+### Q25. Did you use a separate test set?
+
+Be careful here.
+
+Your current reported **97.42% is validation performance**, so say:
+
+> "Our reported 97.42% result is on the held-out validation set. We did not present it as an independent test-set accuracy."
+
+That's a technically honest answer.
+
+---
+
+# PART 4 — MACHINE LEARNING
+
+### Q26. What type of machine-learning problem is this?
+
+> "It is a supervised multi-class image classification problem."
+
+---
+
+### Q27. Why supervised learning?
+
+> "Because our training images have known labels, such as Corn Common Rust or Tomato Early Blight. The model learns the relationship between images and their labels."
+
+---
+
+### Q28. Why image classification?
+
+> "Because the input is an image and the goal is to select one disease or healthy category from multiple possible classes."
+
+---
+
+### Q29. Which model did you use?
+
+# **EfficientNetB0**
+
+---
+
+### Q30. What is EfficientNet?
+
+> "EfficientNet is a family of convolutional neural network architectures designed to achieve a good balance between accuracy and computational efficiency."
+
+---
+
+### Q31. Why EfficientNetB0?
+
+> "We selected EfficientNetB0 because it gives a good balance between model performance and computational requirements, which is useful for deploying a machine-learning model as a web service."
+
+---
+
+### Q32. Why not use a very large model?
+
+> "A larger model can require more memory and computational resources. We wanted a model that was accurate while remaining practical for deployment."
+
+---
+
+### Q33. What is CNN?
+
+> "CNN stands for Convolutional Neural Network. It is a neural network architecture particularly useful for images because it can learn spatial features such as edges, textures, shapes and patterns."
+
+---
+
+### Q34. How does a CNN understand a leaf?
+
+> "The early layers learn simple features such as edges and colors. Deeper layers combine these features into more complex patterns, such as spots, lesions and disease-related textures."
+
+---
+
+# PART 5 — TRANSFER LEARNING
+
+### Q35. What is transfer learning?
+
+> "Transfer learning means taking a model that has already learned useful visual features from a large dataset and adapting it to our specific problem."
+
+---
+
+### Q36. Why did you use transfer learning?
+
+> "Training a deep neural network completely from scratch requires a large amount of data and computation. Transfer learning allows us to reuse useful visual features and train our disease classifier more efficiently."
+
+---
+
+### Q37. What pretrained weights did you use?
+
+> "We used ImageNet-pretrained EfficientNetB0 weights."
+
+---
+
+### Q38. What is ImageNet?
+
+> "ImageNet is a very large image dataset commonly used to pretrain computer-vision models."
+
+---
+
+### Q39. What does pretrained mean?
+
+> "It means the model has already learned useful visual representations from another large dataset before we adapt it to our task."
+
+---
+
+# PART 6 — IMAGE PROCESSING
+
+### Q40. What image size does your model use?
+
+# **160 × 160 × 3**
+
+Where:
+
+- 160 = height
+- 160 = width
+- 3 = RGB channels
+
+---
+
+### Q41. Why 3 channels?
+
+> "Because our images are RGB images, which have red, green and blue channels."
+
+---
+
+### Q42. Why resize images?
+
+> "Neural networks expect a consistent input size. Our model expects 160×160 images, so uploaded images are resized to that size before prediction."
+
+---
+
+### Q43. What happens if the uploaded image is larger?
+
+> "It is resized to the required 160×160 dimensions before being passed to the model."
+
+---
+
+### Q44. What is data augmentation?
+
+> "Data augmentation creates slightly modified versions of training images, such as flipping, rotating, zooming or changing contrast, so the model learns to handle variations in images."
+
+---
+
+### Q45. Why use augmentation?
+
+> "It helps improve generalization and reduces dependence on the exact appearance or orientation of training images."
+
+---
+
+# PART 7 — MODEL TRAINING
+
+### Q46. How did you train your model?
+
+> "We first loaded the PlantVillage dataset and verified the 38 classes. We used EfficientNetB0 with pretrained ImageNet weights. Initially, the base model was mostly frozen and we trained the classification head. Then we fine-tuned the deeper layers using a much smaller learning rate."
+
+---
+
+### Q47. What is fine-tuning?
+
+> "Fine-tuning means unfreezing some pretrained layers and allowing them to adapt to our specific dataset using a small learning rate."
+
+---
+
+### Q48. Why use a smaller learning rate during fine-tuning?
+
+> "Because the pretrained model already has useful features. Large updates could destroy those features, so we make smaller updates."
+
+---
+
+### Q49. What optimizer did you use?
+
+> **Adam optimizer.**
+
+If they ask:
+
+> "Why Adam?"
+
+Say:
+
+> "Adam is an adaptive optimization algorithm that generally works well for deep-learning training and adjusts the learning rate for different parameters."
+
+---
+
+### Q50. What loss function did you use?
+
+> **Sparse categorical cross-entropy.**
+
+---
+
+### Q51. Why sparse categorical cross-entropy?
+
+> "Because our labels are represented as integer class indices rather than one-hot encoded vectors."
+
+---
+
+### Q52. What is an epoch?
+
+> "One complete pass through the training dataset."
+
+---
+
+### Q53. What is batch size?
+
+> "The number of images processed before the model updates its weights."
+
+---
+
+### Q54. What is learning rate?
+
+> "Learning rate controls how much the model's weights change during each optimization step."
+
+---
+
+### Q55. What is dropout?
+
+> "Dropout temporarily removes some neurons during training. It helps reduce overfitting by preventing the network from relying too heavily on particular neurons."
+
+---
+
+# PART 8 — YOUR RESULTS
+
+### Q56. What is your accuracy?
+
+Say exactly:
+
+> **"Our best validation accuracy after fine-tuning was approximately 97.42% on the PlantVillage validation set."**
+
+Don't simply say:
+
+> "Our model is 97.42% accurate."
+
+---
+
+### Q57. What is accuracy?
+
+> "Accuracy is the proportion of predictions that the model classified correctly out of all predictions."
+
+Formula:
+
+\[
+Accuracy = \frac{Correct\ Predictions}{Total\ Predictions}
+\]
+
+---
+
+### Q58. What is precision?
+
+> "Precision tells us, out of the images the model predicted as a particular class, how many were actually that class."
+
+Formula:
+
+\[
+Precision = \frac{TP}{TP+FP}
+\]
+
+---
+
+### Q59. What is recall?
+
+> "Recall tells us, out of all the actual images belonging to a class, how many the model successfully detected."
+
+Formula:
+
+\[
+Recall = \frac{TP}{TP+FN}
+\]
+
+---
+
+### Q60. What is F1-score?
+
+> "F1-score is the harmonic mean of precision and recall. It gives us a balance between false positives and false negatives."
+
+\[
+F1=2\times\frac{Precision\times Recall}{Precision+Recall}
+\]
+
+---
+
+### Q61. What is your F1-score?
+
+Your PPT reports:
+
+> **Weighted F1 = 0.9743**
+
+and:
+
+> **Macro F1 = 0.9668**
+
+So say:
+
+> "Our weighted F1-score is 0.9743, or approximately 97.43%, and our macro F1-score is 0.9668."
+
+---
+
+### Q62. Difference between macro F1 and weighted F1?
+
+This is a very likely question.
+
+> **"Macro F1 calculates the F1-score for every class and gives every class equal importance. Weighted F1 also calculates class-wise F1, but gives more weight to classes that contain more samples."**
+
+Simple:
+
+```text
+Macro F1
+→ every class equally important
+
+Weighted F1
+→ larger classes have more influence
+```
+
+---
+
+### Q63. Why can accuracy and F1-score be different?
+
+> "Accuracy looks at the overall percentage of correct predictions, while F1 considers precision and recall for individual classes. Therefore, F1 can reveal class-specific weaknesses that overall accuracy may hide."
+
+---
+
+### Q64. What is validation loss?
+
+> "It measures how different the model's predicted probability distribution is from the correct labels on the validation data. Lower loss generally indicates better performance."
+
+---
+
+### Q65. Your validation loss was?
+
+> **Approximately 0.0754 at the best fine-tuning result.**
+
+---
+
+# PART 9 — CONFIDENCE SCORE
+
+### Q66. What is confidence?
+
+> "The model's softmax output gives a probability-like score for each class. We display the highest score as the prediction confidence."
+
+---
+
+### Q67. Is 99% confidence the same as 99% actual correctness?
+
+**Very important.**
+
+> "No. A softmax confidence score is not automatically a calibrated probability of correctness. A 99% model score does not guarantee that the prediction is correct."
+
+Excellent answer.
+
+---
+
+### Q68. Why show confidence?
+
+> "It gives the user an indication of how strongly the model favors the predicted class and helps the user interpret the result more cautiously."
+
+---
+
+### Q69. Why do you have a 60% warning?
+
+> "We currently use 60% as a practical UI warning threshold. It tells the user that the model is relatively uncertain and suggests taking another image. It is not a scientifically calibrated universal threshold."
+
+---
+
+# PART 10 — CORN PROBLEM
+
+### Q70. What was the biggest problem you faced?
+
+This is one of your best answers:
+
+> "Our initial model had only 15 output classes and did not contain Corn classes. So when we uploaded a Corn image, the model had no Corn class available and could incorrectly classify it as something like Tomato Early Blight."
+
+---
+
+### Q71. How did you fix it?
+
+> "We retrained the model using the 38-class PlantVillage dataset, which includes four Corn categories: Common Rust, Northern Leaf Blight, Cercospora or Gray Leaf Spot and Healthy Corn."
+
+---
+
+### Q72. Did the new model actually learn Corn?
+
+> "Yes. We specifically tested Corn classes. For example, our validation samples for Common Rust, Healthy Corn and Northern Leaf Blight were correctly classified with very high model confidence."
+
+---
+
+### Q73. Is the model perfect for Corn?
+
+> "No. Corn Common Rust and Healthy Corn performed extremely well in our individual tests, while Cercospora/Gray Leaf Spot was more challenging and was sometimes confused with Northern Leaf Blight. This shows why class-wise evaluation is important."
+
+This is a **great answer** because it demonstrates that you actually analyzed the model.
+
+---
+
+# PART 11 — OVERFITTING
+
+### Q74. What is overfitting?
+
+> "Overfitting happens when a model learns the training data too closely and doesn't generalize well to unseen data."
+
+---
+
+### Q75. How did you reduce overfitting?
+
+Mention:
+
+> "Data augmentation, dropout, validation monitoring, early stopping and careful fine-tuning."
+
+---
+
+### Q76. How do you know your model isn't simply memorizing the training data?
+
+> "We monitor validation performance separately from training performance. Our evaluation is performed on held-out validation images rather than the same images used to update the model."
+
+---
+
+# PART 12 — FRONTEND
+
+### Q77. Why React?
+
+> "React makes it convenient to build a component-based interactive user interface. It also makes it easy to manage different pages and application states."
+
+---
+
+### Q78. What is Vite?
+
+> "Vite is the development and build tool we use for our React application. It provides fast development and builds the production frontend."
+
+---
+
+### Q79. What features are present in your frontend?
+
+Mention:
+
+- Image upload
+- Camera input
+- Crop selection
+- Disease prediction
+- Confidence score
+- Disease guide
+- Scan history
+- CSV export
+- Language switching
+- Sharing
+- Settings
+
+---
+
+### Q80. Where is scan history stored?
+
+> "The current frontend stores scan history locally in the browser using localStorage."
+
+---
+
+### Q81. Does the history go into a database?
+
+> "Not in the current version. The current implementation uses browser localStorage. A future version can use authenticated cloud storage and a database."
+
+---
+
+# PART 13 — BACKEND
+
+### Q82. What language is your backend?
+
+> **Python.**
+
+---
+
+### Q83. What framework?
+
+> **FastAPI.**
+
+---
+
+### Q84. What does the backend do?
+
+> "It receives the image, preprocesses it, passes it to the Keras model, obtains the prediction, maps the output index to the class name and returns the result as JSON."
+
+---
+
+### Q85. What does JSON mean?
+
+> "JSON stands for JavaScript Object Notation. It is a lightweight format for transferring structured data between the frontend and backend."
+
+Example:
+
+```json
+{
+  "predictions": [
+    {
+      "label": "Corn Common Rust",
+      "confidence": 0.98
+    }
+  ]
+}
+```
+
+---
+
+### Q86. What is CORS?
+
+> "CORS stands for Cross-Origin Resource Sharing. It controls which frontend origins are allowed to communicate with our backend API."
+
+---
+
+### Q87. Why did you need CORS?
+
+> "Our frontend and backend are deployed separately, so they have different origins. We configure the backend to allow requests from our frontend domain."
+
+---
+
+# PART 14 — DEPLOYMENT
+
+### Q88. Where is the frontend deployed?
+
+> **Vercel.**
+
+---
+
+### Q89. Where is the backend deployed?
+
+> **Render.**
+
+---
+
+### Q90. Why separate deployments?
+
+> "The React frontend and Python machine-learning backend have different runtime requirements, so deploying them separately is practical."
+
+---
+
+### Q91. How does Vercel communicate with Render?
+
+> "The React application sends HTTPS API requests to the FastAPI backend deployed on Render."
+
+---
+
+### Q92. What happens if Render is sleeping?
+
+If using a free/cold-start deployment:
+
+> "The first request can take longer while the backend service wakes up. After it is running, subsequent requests are faster."
+
+Don't over-explain unless they ask.
+
+---
+
+# PART 15 — `class_names.json`
+
+### Q93. Why do you need `class_names.json`?
+
+> "The neural network outputs numerical class indices. `class_names.json` maps those indices to human-readable disease names."
+
+Example:
+
+```text
+0 → Apple Scab
+1 → Apple Black Rot
+...
+```
+
+---
+
+### Q94. What happens if the class mapping is wrong?
+
+> "The model could make a mathematically correct prediction index, but the backend could display the wrong disease name. Therefore the order of class names must exactly match the model's training class order."
+
+---
+
+### Q95. How many outputs does your final model have?
+
+> **38 outputs.**
+
+---
+
+# PART 16 — UNKNOWN / RANDOM IMAGES
+
+### Q96. What happens if I upload a car image?
+
+This is a very good tricky question.
+
+> "Our current model is a closed-set classifier. It is designed to choose among its 38 known classes, so an unrelated image could still receive a prediction. This is a limitation."
+
+---
+
+### Q97. How would you solve that?
+
+> "We would add out-of-distribution detection or a separate plant-versus-non-plant classifier, and calibrate confidence thresholds using appropriate validation data."
+
+---
+
+### Q98. Can you guarantee that the uploaded image is a leaf?
+
+> "Not with the current classifier alone. That's an area for future improvement."
+
+---
+
+# PART 17 — LIMITATIONS
+
+### Q99. What are the limitations of your project?
+
+Mention these:
+
+1. PlantVillage is relatively controlled.
+2. Real field images can differ.
+3. Closed-set classification.
+4. Similar diseases can be confused.
+5. Multiple diseases on one leaf aren't currently handled well.
+6. Disease severity isn't currently estimated.
+7. Internet/backend availability is required for the deployed web version.
+
+---
+
+### Q100. What happens if two diseases appear on the same leaf?
+
+> "Our current model is primarily designed for single dominant-class classification. Handling multiple simultaneous diseases would require a multi-label or more advanced detection approach."
+
+---
+
+### Q101. Can your model detect disease severity?
+
+> "Not currently. It predicts the disease class. Severity estimation is part of future work."
+
+---
+
+# PART 18 — FUTURE SCOPE
+
+### Q102. What will you improve in the future?
+
+> "We want to add more real-world field images, out-of-distribution detection, more crops and diseases, disease severity estimation, multi-disease detection, improved multilingual support and potentially offline/mobile deployment."
+
+---
+
+### Q103. Why real-world images?
+
+> "Because controlled datasets don't fully represent the conditions of images taken by farmers in actual fields."
+
+---
+
+### Q104. Why offline deployment?
+
+> "Some agricultural areas may have limited or unreliable internet access. An optimized mobile or edge model could make the system usable in those situations."
+
+---
+
+# PART 19 — SECURITY / PRIVACY
+
+### Q105. Are user images permanently stored?
+
+> "In our current frontend implementation, scan history is stored locally in the browser. The system does not currently implement a cloud database for user history."
+
+---
+
+### Q106. What security improvements would you add?
+
+> "Authentication, HTTPS, file-type validation, file-size limits, secure API configuration, rate limiting and proper cloud storage policies."
+
+---
+
+# PART 20 — HARD ML QUESTIONS
+
+### Q107. What is an activation function?
+
+> "An activation function introduces non-linearity into a neural network so that it can learn complex patterns."
+
+---
+
+### Q108. What activation does your final layer use?
+
+> **Softmax.**
+
+---
+
+### Q109. Why Softmax?
+
+> "Because we have a multi-class classification problem and need a probability-like score for each of the 38 classes."
+
+---
+
+### Q110. What is ReLU?
+
+> "ReLU stands for Rectified Linear Unit. It outputs zero for negative values and keeps positive values, and it is commonly used in neural networks to introduce non-linearity."
+
+---
+
+### Q111. What is backpropagation?
+
+> "Backpropagation calculates how much each model parameter contributed to the error and uses that information to update the weights."
+
+---
+
+### Q112. What is an optimizer?
+
+> "An optimizer updates the model's weights to reduce the loss function."
+
+---
+
+### Q113. What is an epoch versus iteration?
+
+> **Epoch:** one complete pass through the dataset.
+
+> **Iteration:** one parameter update, usually after processing one batch.
+
+---
+
+# PART 21 — VERY TRICKY QUESTIONS
+
+### Q114. Your accuracy is 97.42%. Why not 100%?
+
+> "Because plant disease images can contain visually similar patterns, and some classes are naturally harder to distinguish. A small amount of misclassification is expected. Our goal is strong generalization rather than memorization."
+
+---
+
+### Q115. Why is validation accuracy higher/lower than training accuracy?
+
+> "Training and validation data are different, and augmentation can make training images harder than the original validation images. Small differences between the two are normal."
+
+---
+
+### Q116. Is higher accuracy always better?
+
+> "Not necessarily. If the dataset is imbalanced, accuracy can hide poor performance on minority classes. That's why we also use precision, recall and F1-score."
+
+🔥 **This is a very good answer to memorize.**
+
+---
+
+### Q117. Why use F1 instead of only accuracy?
+
+> "F1 combines precision and recall, so it provides a better view of class-specific performance, especially when classes are not perfectly balanced."
+
+---
+
+### Q118. What is class imbalance?
+
+> "Class imbalance occurs when some classes contain many more images than others."
+
+---
+
+### Q119. How did you handle class imbalance?
+
+Be precise:
+
+> "We used data augmentation to improve generalization and evaluated the model using class-wise precision, recall and F1-score. We did not rely only on overall accuracy."
+
+**Do not claim class weighting unless it is actually implemented in your code.**
+
+---
+
+### Q120. What is a confusion matrix?
+
+> "A confusion matrix shows how actual classes are distributed across predicted classes. It helps us identify which classes the model confuses with each other."
+
+Example:
+
+```text
+Actual ↓ / Predicted →
+
+                 Rust   Blight   Healthy
+Rust              95       5        0
+Blight             3      97        0
+Healthy            0       0      100
+```
+
+---
+
+# PART 22 — LITERATURE SURVEY QUESTIONS
+
+### Q121. Why did you do a literature survey?
+
+> "To understand existing approaches, datasets, architectures, performance and limitations before selecting our own methodology."
+
+---
+
+### Q122. What did previous research show?
+
+> "Previous PlantVillage research demonstrated that deep-learning models can achieve very high classification performance on controlled leaf images, while later research also highlighted the challenge of transferring that performance to real field conditions."
+
+---
+
+### Q123. What is different about your project from a research paper?
+
+> "Our focus is on building an end-to-end usable application: trained model, backend API, frontend interface and cloud deployment."
+
+---
+
+# PART 23 — "WHY SHOULD WE SELECT YOUR PROJECT?"
+
+If teacher asks:
+
+> **"What is the contribution of your project?"**
+
+Say:
+
+> "Our contribution is the integration of a trained 38-class plant disease model into a complete web application, along with a user-friendly interface, prediction confidence, disease information and cloud deployment. We also identified and corrected a limitation in our initial model where unsupported Corn images were being classified into existing Tomato classes."
+
+This is probably your **best answer**.
+
+---
+
+# 🔥 15 QUESTIONS YOU MUST MEMORIZE TONIGHT
+
+If you don't have time to study all 123, memorize these:
+
+1. **What is PlantGuard?**
+2. **What problem are you solving?**
+3. **Why AI?**
+4. **What dataset?** → PlantVillage
+5. **How many classes?** → 38
+6. **What model?** → EfficientNetB0
+7. **Why EfficientNetB0?**
+8. **What is transfer learning?**
+9. **What is your validation accuracy?** → 97.42%
+10. **What is F1-score?**
+11. **Why precision/recall/F1?**
+12. **How does React communicate with the model?** → React → FastAPI → Keras
+13. **What was your biggest challenge?** → 15-class model couldn't recognize Corn
+14. **What are your limitations?**
+15. **What is future scope?**
+
+---
+
+# 🧠 The Ultimate 10-Line Cheat Sheet
+
+Before entering the evaluation, all four members should know this:
+
+```text
+Project       → PlantGuard
+Problem       → Preliminary crop disease detection
+Dataset       → PlantVillage
+Classes       → 38
+Model         → EfficientNetB0
+Input         → 160 × 160 × 3 RGB
+Training      → Transfer learning + fine-tuning
+Accuracy      → 97.42% validation accuracy
+F1            → 0.9743 weighted / 0.9668 macro
+Architecture  → React → FastAPI → EfficientNetB0 → Prediction
+Frontend      → React + Vite
+Backend       → Python + FastAPI
+Deployment    → Vercel + Render
+```
+
+### And remember this distinction:
+
+**Accuracy** → How many predictions overall were correct.
+
+**Precision** → When model says "this disease", how often is it right?
+
+**Recall** → Of all actual cases of that disease, how many did it find?
+
+**F1** → Balance between precision and recall.
+
+If you can explain those four confidently, plus **EfficientNet + transfer learning + your architecture**, you'll be able to handle most technical questions the evaluator throws at you.

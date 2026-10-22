@@ -217,14 +217,21 @@ main {
 }
 
 .navbar-logo .logo-icon {
-  width: 36px;
-  height: 36px;
-  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
-  border-radius: var(--radius-md);
+  width: 38px;
+  height: 38px;
+  background: linear-gradient(135deg, #22c55e, #059669);
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #fff;
+  box-shadow: 0 0 14px rgba(34, 197, 94, 0.45);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.navbar-logo:hover .logo-icon {
+  transform: scale(1.1) rotate(-6deg);
+  box-shadow: 0 0 22px rgba(34, 197, 94, 0.65);
 }
 
 .navbar-links {

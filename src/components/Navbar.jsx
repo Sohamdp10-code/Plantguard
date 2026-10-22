@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Leaf, Menu, X, Scan } from 'lucide-react'
+import { Sprout, Menu, X, Scan } from 'lucide-react'
 
 function Navbar() {
   const [scrolled, setScrolled] = useState(false)
@@ -28,9 +28,9 @@ function Navbar() {
         <div className="navbar-inner">
           <Link to="/" className="navbar-logo" id="logo-link">
             <div className="logo-icon">
-              <Leaf size={20} />
+              <Sprout size={20} />
             </div>
-            <span>Fasal Rakshak</span>
+            <span>PlantGuard</span>
           </Link>
 
           <div className="navbar-links">
